@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Panel"
+    title="Akamai">
+    <items jcr:primaryType="cq:WidgetCollection">
+        <type
+            jcr:primaryType="cq:Widget"
+            defaultValue="arl"
+            fieldLabel="Type"
+            fieldDescription="Selecting &quot;URLs/ARLs&quot; will instruct Akamai to take action on the resources in the activation request. When purging by &quot;CP codes&quot; resources in the activation request are not considered."
+            name="./akamaiType"
+            type="select"
+            xtype="selection">
+            <listeners
+                        jcr:primaryType="nt:unstructured"
+                        loadcontent="function(){var d = this.findParentByType(&quot;panel&quot;).findById(&quot;cpcodes&quot;);var c = this.findParentByType(&quot;panel&quot;).findById(&quot;parentfolderpaths&quot;);var e = this.findParentByType('panel').findById(&quot;httpsenabled&quot;);if(this.value === &quot;arl&quot;){d.setVisible(false);c.setVisible(true);e.setVisible(true);}else{d.setVisible(true);c.setVisible(false);e.setVisible(false);}};"
+                        selectionchanged="function(cmp, val){var d = cmp.findParentByType(&quot;panel&quot;).findById(&quot;cpcodes&quot;);var c = cmp.findParentByType(&quot;panel&quot;).findById(&quot;parentfolderpaths&quot;);var e = cmp.findParentByType('panel').findById(&quot;httpsenabled&quot;);if(val === &quot;arl&quot;){d.setVisible(false);c.setVisible(true);e.setVisible(true);}else{d.setVisible(true);c.setVisible(false);e.setVisible(false);}};"/>
+            
+            <options jcr:primaryType="cq:WidgetCollection">
+                <arl
+                    jcr:primaryType="nt:unstructured"
+                    text="URLs/ARLs"
+                    value="arl"/>
+                <cpcode
+                    jcr:primaryType="nt:unstructured"
+                    text="CP codes"
+                    value="cpcode"/>
+            </options>
+        </type>
+        <cpCodes
+            jcr:primaryType="cq:Widget"
+            fieldLabel="CP Codes"
+            fieldDescription="CAUTION: Purging by CP code can significantly slow your origin server as Edge servers may need to refetch large amounts of data. Purging multiple CP codes may magnify this effect."
+            name="./akamaiCPCodes"
+            id="cpcodes"
+            xtype="multifield"/>
+        <domain
+            jcr:primaryType="cq:Widget"
+            defaultValue="production"
+            fieldLabel="Domain"
+            name="./akamaiDomain"
+            type="select"
+            xtype="selection">
+            <options jcr:primaryType="cq:WidgetCollection">
+                <production
+                    jcr:primaryType="nt:unstructured"
+                    text="production"
+                    value="production"/>
+                <staging
+                    jcr:primaryType="nt:unstructured"
+                    text="staging"
+                    value="staging"/>
+            </options>
+        </domain>
+        <action
+            jcr:primaryType="cq:Widget"
+            defaultValue="remove"
+            fieldLabel="Action"
+            fieldDescription="&quot;Remove&quot; deletes the content from Edge server caches. The next time an Edge server receives a request for the content, it will retrieve the current version from the origin server. &quot;Invalidate&quot; marks the cached content as invalid. The next time a server receives a request for the content, it sends an HTTP conditional GET (If-Modified-Since) request to the origin. If the content has changed, the origin server returns a full fresh copy. Otherwise, the origin normally responds that the content has not changed, and the Edge server can serve the already-cached content."
+            name="./akamaiAction"
+            type="select"
+            xtype="selection">
+            <options jcr:primaryType="cq:WidgetCollection">
+                <remove
+                    jcr:primaryType="nt:unstructured"
+                    text="remove"
+                    value="remove"/>
+                <invalidate
+                    jcr:primaryType="nt:unstructured"
+                    text="invalidate"
+                    value="invalidate"/>
+            </options>
+        </action>
+        
+        <ccuapitype
+            jcr:primaryType="cq:Widget"
+            defaultValue="arl"
+            fieldLabel="CCU API Type"
+            fieldDescription="Selecting &quot;CCU V2&quot; will instruct Akamai to consider CCU V2 API (Which usually takes 1-4 mins for URL Purge). When selecting by &quot;CCU V3&quot; make sure the below fields are entered. ClientToken, AccessToken, ClientSecret, HostHeader, OpenAuthServiceURL and Hostname"
+            name="./ccuapitype"
+            type="select"
+            xtype="selection">
+            <listeners
+                        jcr:primaryType="nt:unstructured"
+                        loadcontent="function(){var d = this.findParentByType(&quot;panel&quot;).findById(&quot;ccuv3dialog&quot;);var c = this.findParentByType(&quot;panel&quot;).findById(&quot;httpsenabled&quot;);if(this.value === &quot;V2&quot;){ d.setVisible(false);c.setVisible(true);}else{d.setVisible(true); c.setVisible(false);}};"
+                        selectionchanged="function(cmp, val){var d = cmp.findParentByType(&quot;panel&quot;).findById(&quot;ccuv3dialog&quot;);var c = cmp.findParentByType(&quot;panel&quot;).findById(&quot;httpsenabled&quot;);if(val === &quot;V2&quot;){ d.setVisible(false);c.setVisible(true);}else{d.setVisible(true); c.setVisible(false);}};"/>
+            <options jcr:primaryType="cq:WidgetCollection">
+                <V2
+                    jcr:primaryType="nt:unstructured"
+                    text="CCU V2"
+                    value="V2"/>
+                <V3
+                    jcr:primaryType="nt:unstructured"
+                    text="CCU V3"
+                    value="V3"/>
+            </options>
+        </ccuapitype>
+        
+         <ccuv3dialog
+                        jcr:primaryType="cq:Widget"
+                        collapsed="{Boolean}false"
+                        collapsible="{Boolean}false"
+                        hidden="{Boolean}false"
+                        id="ccuv3dialog"
+                        title="CCU V3 Parameters"
+                        xtype="dialogfieldset">
+                        <items jcr:primaryType="cq:WidgetCollection">
+                            <clientToken
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Client Token for performing CCU V3 purge request"
+					            fieldLabel="Akamai Client Token"
+					            name="./clientToken"
+					            xtype="textfield"/>
+					        <accessToken
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Access Token for performing CCU V3 purge request"
+					            fieldLabel="Akamai Access Token"
+					            name="./accessToken"
+					            xtype="textfield"/>
+					            
+					         <clientSecret
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Client Secret for performing CCU V3 purge request"
+					            fieldLabel="Akamai Client Secret"
+					            name="./clientSecret"
+					            xtype="textfield"/>      
+					        <hostHeader
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Host Header for performing CCU V3 purge request"
+					            fieldLabel="Akamai Host Header"
+					            name="./hostHeader"
+					            xtype="textfield"/>
+					        <openAuthServiceURL
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Open Auth Service URL for performing CCU V3 purge request"
+					            fieldLabel="Akamai Open Auth Service URL"
+					            name="./openAuthServiceURL"
+					            xtype="textfield"/>
+                        </items>
+                    </ccuv3dialog>
+        <httpsEnabled
+            jcr:primaryType="cq:Widget"
+            fieldLabel="Enable HTTPS Purge"
+            inputValue="true"
+            name="./httpsEnabled"
+            id="httpsenabled"
+            type="checkbox" 
+            xtype="selection"/>
+            
+            
+        <parentfolderpaths
+            jcr:primaryType="cq:Widget"
+            fieldLabel="Parent Folder Path(s)"
+            fieldDescription="Use this only when you have to Auto-Invalidate Parent Folders based on child pages Activation/De-Activation"
+            name="./parentfolderpaths"
+            id="parentfolderpaths"
+            xtype="multifield"/>
+         
+         <homePageURL
+					            jcr:primaryType="cq:Widget"
+					            fieldDescription="Home Page Path which will also be used for externalizing the URL's"
+					            fieldLabel="Home Page URL"
+					            name="./homePageURL"
+					            xtype="pathfield"/>
+					                   
+    </items>
+</jcr:root>
